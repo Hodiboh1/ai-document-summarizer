@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "/tmp/" });
 
 app.use(express.json());
 app.use(express.static("public"));
