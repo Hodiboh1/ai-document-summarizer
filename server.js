@@ -3,15 +3,24 @@ import dotenv from "dotenv";
 import express from "express";
 import multer from "multer";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const upload = multer({ dest: "/tmp/" });
 
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.post("/summarize", upload.single("file"), async (req, res) => {
   try {
@@ -44,3 +53,5 @@ app.post("/summarize", upload.single("file"), async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+
+export default app;
